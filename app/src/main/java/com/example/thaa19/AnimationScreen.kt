@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.helper_view_layout.*
 
 class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
-    val SHOW_POSITION = true// *************
+    var SHOW_POSITION: Boolean = true// *************
 
     companion object {
         const val FILE_NUM = "file_num"
@@ -68,12 +68,10 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_animation_screen)
+        setLayoutShowMode()
 
-        if (SHOW_POSITION) {
-            setContentView(R.layout.show_layout)
-        } else {
-            setContentView(R.layout.activity_animation_screen)
-        }
+
 
         setupParams()
 
@@ -85,6 +83,74 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         moveTheAnimation()     // Let's play
     }
 
+    private fun setLayoutShowMode() {
+        if (SHOW_POSITION) {
+            plusAndMinusBtn.text = "Start"
+            lastTalker_button.text = "Test"
+            saveButton.text = "----"
+            upper_layout.visibility = View.INVISIBLE
+            style_ListView.visibility = View.INVISIBLE
+            para_ListView.visibility = View.INVISIBLE
+            ttPara_listView.visibility = View.INVISIBLE
+            action_ListView.visibility = View.INVISIBLE
+
+        } else {
+            plusAndMinusBtn.text = "+"
+            lastTalker_button.text = "Last"
+            saveButton.text = "Save"
+            upper_layout.visibility = View.VISIBLE
+            style_ListView.visibility = View.VISIBLE
+            para_ListView.visibility = View.VISIBLE
+            ttPara_listView.visibility = View.VISIBLE
+            action_ListView.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onClick(v: View) {
+        if (SHOW_POSITION) {
+            when (v.id) {
+                R.id.plusAndMinusBtn -> {
+                    initIt()
+                }
+                R.id.saveButton -> saveIt()
+                R.id.nextButton -> nextIt()
+                R.id.lastTalker_button -> {
+                    SHOW_POSITION = false
+                    setLayoutShowMode()
+                }
+                else -> moveTheAnimation()
+            }
+        }else {
+            when (v.id) {
+                R.id.textRevBtn -> readAgainTextFile()
+                R.id.newPageBtn -> enterNewCounterStep()
+                R.id.toShowModeBtn -> {
+                    SHOW_POSITION = true
+                    setLayoutShowMode()
+                }
+                R.id.plusAndMinusBtn -> changePlusMinusMode()
+                R.id.displayAgainBtn -> moveTheAnimation()
+                R.id.saveButton -> saveIt()
+                R.id.nextButton -> nextIt()
+                R.id.previousButton -> previousIt()
+                R.id.lastTalker_button -> retriveLastTalker()
+                R.id.reSizeTextBtn -> minTextSize()
+                else -> moveTheAnimation()
+            }
+        }
+    }
+    private fun initButton() {
+        displayAgainBtn.setOnClickListener { onClick(displayAgainBtn) }
+        textRevBtn.setOnClickListener { onClick(textRevBtn) }
+        newPageBtn.setOnClickListener { onClick(newPageBtn) }
+        plusAndMinusBtn.setOnClickListener { onClick(plusAndMinusBtn) }
+        saveButton.setOnClickListener { onClick(saveButton) }
+        nextButton.setOnClickListener { onClick(nextButton) }
+        previousButton.setOnClickListener { onClick(previousButton) }
+        lastTalker_button.setOnClickListener { onClick(lastTalker_button) }
+        reSizeTextBtn.setOnClickListener { onClick(reSizeTextBtn) }
+        toShowModeBtn.setOnClickListener { onClick(toShowModeBtn) }
+    }
     private fun setupParams() {
         myPref = getSharedPreferences(PREFS_NAME, 0)
         editor = myPref.edit()
@@ -472,27 +538,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
     //------------------
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.textRevBtn -> readAgainTextFile()
-            R.id.newPageBtn -> enterNewCounterStep()
-            R.id.plusAndMinusBtn -> {
-                if (SHOW_POSITION) {
-                    plusAndMinusBtn.text = "Start"
-                    initIt()
-                } else {
-                    changePlusMinusMode()
-                }
-            }
-            R.id.displayAgainBtn -> moveTheAnimation()
-            R.id.saveButton -> saveIt()
-            R.id.nextButton -> nextIt()
-            R.id.previousButton -> previousIt()
-            R.id.lastTalker_button -> retriveLastTalker()
-            R.id.reSizeTextBtn -> minTextSize()
-            else -> moveTheAnimation()
-        }
-    }
 
     private fun retriveLastTalker() {
         tranferTalkItem(1)
@@ -623,21 +668,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             } else {
                 false
             }
-        }
-    }
-
-    private fun initButton() {
-        displayAgainBtn.setOnClickListener { onClick(displayAgainBtn) }
-        textRevBtn.setOnClickListener { onClick(textRevBtn) }
-        newPageBtn.setOnClickListener { onClick(newPageBtn) }
-        plusAndMinusBtn.setOnClickListener { onClick(plusAndMinusBtn) }
-        saveButton.setOnClickListener { onClick(saveButton) }
-        nextButton.setOnClickListener { onClick(nextButton) }
-        previousButton.setOnClickListener { onClick(previousButton) }
-        lastTalker_button.setOnClickListener { onClick(lastTalker_button) }
-        reSizeTextBtn.setOnClickListener { onClick(reSizeTextBtn) }
-        if (SHOW_POSITION) {
-            plusAndMinusBtn.text = "Start"
         }
     }
 

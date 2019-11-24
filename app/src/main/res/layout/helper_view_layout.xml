@@ -74,22 +74,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/showBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show"
-            android:textSize="10sp" />
-        <Button
             android:id="@+id/textRevBtn"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:text="Read Text"
             android:textSize="10sp" />
 
+
         <Button
             android:id="@+id/reSizeTextBtn"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:text="Mini Text"
             android:textSize="10sp"
@@ -97,20 +93,26 @@
 
         <Button
             android:id="@+id/newPageBtn"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:text="New Page"
             android:textSize="10sp" />
 
         <Button
             android:id="@+id/displayAgainBtn"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:text="Display"
-            android:textSize="10sp"
-            android:visibility="visible" />
+            android:textSize="10sp"/>
+        <Button
+            android:id="@+id/toShowModeBtn"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="Show"
+            android:textSize="10sp"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/down_layout"
