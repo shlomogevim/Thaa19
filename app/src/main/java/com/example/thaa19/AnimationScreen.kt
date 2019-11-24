@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -16,13 +17,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_animation_screen.*
+import kotlinx.android.synthetic.main.activity_animation_screen.imageView
 import kotlinx.android.synthetic.main.helper_view_layout.*
+import kotlinx.android.synthetic.main.show_layout.*
 
 
 class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
-    val SHOW_POSITION = true// *************
-
+    var SHOW_POSITION:Boolean = false
     companion object {
         const val FILE_NUM = "file_num"
         const val JSONSTRING = "jsonString"
@@ -30,8 +32,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     }
 
     var talkList = ArrayList<Talker>()
-    lateinit var textTalkList: ArrayList<Talker>
-    lateinit var spicalTalkList: ArrayList<Talker>
 
 
     var currentFileNum = 20
@@ -68,12 +68,18 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_animation_screen)
+        turnLayoutMode()
 
-        if (SHOW_POSITION) {
+
+
+        /*if (SHOW_POSITION) {
             setContentView(R.layout.show_layout)
         } else {
             setContentView(R.layout.activity_animation_screen)
-        }
+        }*/
+
+
 
         setupParams()
 
@@ -82,7 +88,23 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
         prepareThisSection()
 
-        moveTheAnimation()     // Let's play
+        moveTheAnimation()    // Let's play
+
+    }
+
+    private fun turnLayoutMode() {
+        if (SHOW_POSITION){
+            plusAndMinusBtn.setText("Start")
+            lastTalker_button.text = "Test"
+            upper_layout.visibility=View.GONE
+
+
+        }else{
+            plusAndMinusBtn.setText("+")
+            lastTalker_button.text = "Last"
+            upper_layout.visibility=View.VISIBLE
+
+        }
     }
 
     private fun setupParams() {
@@ -91,10 +113,15 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         currentFileNum = intent.getIntExtra(FILE_NUM, 0)
         sharData = ShareData(this, currentFileNum)
         activatApp = ActivateApp(this)
-        animationInAction = AnimationAction(this, mainLayout)
+        if (SHOW_POSITION) {
+            animationInAction = AnimationAction(this, mainLayoutShow)
+        }else{
+            animationInAction = AnimationAction(this, mainLayout)
+        }
+
     }
 
-    private fun createTalkList() {
+        private fun createTalkList() {
         talkList = arrayListOf()
 
         var jsonString = intent.getStringExtra(JSONSTRING)
@@ -154,6 +181,17 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         lastTalker = Talker()
         tranferTalkItem(0)
         backGroundConfigration()
+    }
+
+    private fun turnToTestMode() {
+        SHOW_POSITION = false
+
+        setContentView(R.layout.activity_animation_screen)
+        setupParams()
+        prepareThisSection()
+        moveTheAnimation()
+
+        //  mainLayout.setBackgroundColor(Color.RED)
     }
 
 
@@ -478,7 +516,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             R.id.newPageBtn -> enterNewCounterStep()
             R.id.plusAndMinusBtn -> {
                 if (SHOW_POSITION) {
-                    plusAndMinusBtn.text = "Start"
+                  //  plusAndMinusBtn.text = "Start"
                     initIt()
                 } else {
                     changePlusMinusMode()
@@ -488,11 +526,23 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             R.id.saveButton -> saveIt()
             R.id.nextButton -> nextIt()
             R.id.previousButton -> previousIt()
-            R.id.lastTalker_button -> retriveLastTalker()
+            R.id.lastTalker_button ->
+                if (SHOW_POSITION) {
+
+                  //  lastTalker_button.text = "Test"
+                    //turnToTestMode()
+
+                } else {
+                    retriveLastTalker()
+                }
+
+
             R.id.reSizeTextBtn -> minTextSize()
             else -> moveTheAnimation()
         }
     }
+
+
 
     private fun retriveLastTalker() {
         tranferTalkItem(1)
@@ -636,9 +686,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         previousButton.setOnClickListener { onClick(previousButton) }
         lastTalker_button.setOnClickListener { onClick(lastTalker_button) }
         reSizeTextBtn.setOnClickListener { onClick(reSizeTextBtn) }
-        if (SHOW_POSITION) {
-            plusAndMinusBtn.text = "Start"
-        }
     }
 
 
