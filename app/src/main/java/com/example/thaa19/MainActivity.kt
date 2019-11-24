@@ -1,6 +1,7 @@
 package com.example.thaa19
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +10,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thaa19.AnimationScreen.Companion.FILE_NUM
+import com.example.thaa19.AnimationScreen.Companion.JSONSTRING
+import com.example.thaa19.AnimationScreen.Companion.STARTALK
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -24,17 +27,29 @@ class MainActivity : AppCompatActivity() {
     var talkList=ArrayList<Talker>()
     var jsonString=""
 
+    val PREFS_NAME = "myPrefs"
+    lateinit var myPref: SharedPreferences
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         //  setContentView(R.layout.activity_main)
 
-        retriveDataFromFirebase()
-        Handler().postDelayed(
-            {
-                createJustFirstTalk()
-            },5000
-        )
+        val TALKLIST="talklist"+CURRENT_NUM.toString()
+        myPref = getSharedPreferences(PREFS_NAME, 0)
+        val jsonString = myPref.getString(TALKLIST, null)
+        if (jsonString==null) {
+            retriveDataFromFirebase()
+
+            Handler().postDelayed(
+                {
+                    createJustFirstTalk()
+                }, 5000
+            )
+        }
 
         /*     initAll()
                   recyclerView.layoutManager = layoutManger
@@ -43,23 +58,26 @@ class MainActivity : AppCompatActivity() {
 
                  operateConverastion(Conversation(1,"stam","stam")) */
     }
-
+    private fun createJustFirstTalk() {
+        val intent = Intent(
+            this, AnimationScreen::class.java)
+        intent.putExtra(FILE_NUM, 20)
+        intent.putExtra(JSONSTRING,jsonString)
+        startActivity(intent)
+    }
 
     private fun retriveDataFromFirebase() {
-        talkList= arrayListOf()
-
 
         var db = FirebaseFirestore.getInstance()
-        // Log.d("clima","db="+db.toString())
         db.collection("talker1").document("3").get().addOnCompleteListener { task ->
 
-            // Log.d("clima","inside")
             if (task.result?.exists()!!) {
                 jsonString = task.result!!.getString("main")!!
 
-                // createTalkArray(jsonString)
 
+                // createTalkArray(jsonString)
             } else {
+                jsonString="none"
                 Toast.makeText(
                     this,
                     "Not Find because ${task.exception?.message} ",
@@ -78,15 +96,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    private fun createJustFirstTalk() {
-        val intent = Intent(this, AnimationScreen::class.java)
-        intent.putExtra(FILE_NUM, 20)
-        intent.putExtra("jsonString",jsonString)
-        // Log.d("clima",jsonString)
-        startActivity(intent)
-
-    }
 
 
     private fun initAll() {

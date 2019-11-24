@@ -48,8 +48,7 @@ import java.util.*
             listOfTextviewM: ArrayList<TextView?>,
             dur: Long
         ) {
-            operateBackgroundColor(talker)
-
+          operateBackgroundColor(talker)
 
             when (talker.animNum) {
                 10 -> Utile.move_swing(10, talker, listOfTextview)

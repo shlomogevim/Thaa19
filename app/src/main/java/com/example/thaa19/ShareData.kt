@@ -30,129 +30,8 @@ import java.io.*
         internal var myExternalFile: File? = null
 
 
-        fun saveDataToExternalStorage(talkingList: ArrayList<Talker>) {
-            try {
-                myExternalFile = File(context.getExternalFilesDir(filepath), TALKLIST)
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            val gson = Gson()
-            val jsonString = gson.toJson(talkingList)
-
-
-            try {
-                val fileOutPutStream = FileOutputStream(myExternalFile)
-                fileOutPutStream.write(jsonString.toByteArray())
-                fileOutPutStream.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            // Toast.makeText(applicationContext, "data save", Toast.LENGTH_SHORT).show()
-        }
-
-        fun getTalkingListFromExternalStorage(ind: Int): ArrayList<Talker> {
-            var talkList1: ArrayList<Talker> = arrayListOf()
-            var jsonString=""
-            val gson = Gson()
-            // myExternalFile = File(context.getExternalFilesDir(filepath), TALKLIST)
-
-            //storage/emulated/0/Android/data/com.example.yhaa18/files/MyFileStorage/talklist20
-            val st="/storage/emulated/0/Android/data/com.example.yhaa17/files/MyFileStorage"
-            val st1=st+"/talklist20"
-            myExternalFile = File(st, TALKLIST)
-
-
-            if (TALKLIST != null) {
-                var fileInputStream= FileInputStream(myExternalFile)
-                var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
-                val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
-                val stringBuilder: StringBuilder = StringBuilder()
-                var text: String? = null
-
-                while ({ text = bufferedReader.readLine(); text }() != null) {
-                    stringBuilder.append(text)
-                }
-                jsonString=stringBuilder.toString()
-
-                //      while ({ jsonString = bufferedReader.readLine(); text }() != null)
-
-                if (ind == 0 || jsonString == null) {
-                    talkList1 = createTalkListFromTheStart()
-                    saveData(talkList1)
-
-                } else {
-                    val type = object : TypeToken<ArrayList<Talker>>() {}.type
-                    talkList1 = gson.fromJson(jsonString, type)
-                }
-
-                //           fileInputStream.close()
-            }
-
-            return talkList1
-
-        }
-
-        private fun createTalkArray(jsonString: String?) {
-            //  Log.d("clima",jsonString)
-            talkList= arrayListOf()
-            val gson = Gson()
-            val type = object : TypeToken<ArrayList<Talker>>() {}.type
-            talkList = gson.fromJson(jsonString, type)
-            Log.d("clima","${talkList[19].taking}")
-
-        }
-        private fun retriveDataFromFirebase():String {
-            var jsonString=""
-
-            var db = FirebaseFirestore.getInstance()
-            Log.d("clima","db="+db.toString())
-            db.collection("talker1").document("3").get().addOnCompleteListener { task ->
-
-                Log.d("clima","inside")
-                if (task.result?.exists()!!) {
-                    jsonString = task.result!!.getString("main").toString()
-
-                    createTalkArray(jsonString)
-
-                    Toast.makeText(this, "Find", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Not Find because ${task.exception?.message} ",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-            return jsonString
-        }
-
-
-        /*
-            fun getTalkingList(ind:Int): ArrayList<Talker> {
-                talkList= arrayListOf()
-
-                Log.d("clima","one")
-                val jsonString=retriveDataFromFirebase()
-
-                *//*var talkList1: ArrayList<Talker>
-        val gson = Gson()
-       // val jsonString = myPref.getString(TALKLIST, null)
-        val jsonString = myPref.getString(TALKLIST, null)*//*
-
-        if (ind==0 || jsonString == null) {
-            talkList=createTalkListFromTheStart()
-            saveData(talkList)
-        } else {
-            createTalkArray(jsonString)
-
-            *//*val type = object : TypeToken<ArrayList<Talker>>() {}.type
-            talkList1 = gson.fromJson(jsonString, type)*//*
-        }
-        return talkList
-    }*/
         fun getTalkingList(ind:Int): ArrayList<Talker> {
-            var talkList1: ArrayList<Talker>
+            val talkList1: ArrayList<Talker>
             val gson = Gson()
             // val jsonString = myPref.getString(TALKLIST, null)
             val jsonString = myPref.getString(TALKLIST, null)
@@ -246,11 +125,128 @@ import java.io.*
 
         private fun improveString(st: String) = st.substring(1, st.length - 1)
 
+        private fun createTalkArray(jsonString: String?) {
+            //  Log.d("clima",jsonString)
+            talkList= arrayListOf()
+            val gson = Gson()
+            val type = object : TypeToken<ArrayList<Talker>>() {}.type
+            talkList = gson.fromJson(jsonString, type)
+            Log.d("clima","${talkList[19].taking}")
 
-
+        }
 
     }
 
+/*private fun retriveDataFromFirebase():String {
+    var jsonString=""
 
+    var db = FirebaseFirestore.getInstance()
+    Log.d("clima","db="+db.toString())
+    db.collection("talker1").document("3").get().addOnCompleteListener { task ->
+
+        Log.d("clima","inside")
+        if (task.result?.exists()!!) {
+            jsonString = task.result!!.getString("main").toString()
+
+            createTalkArray(jsonString)
+
+            Toast.makeText(this, "Find", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(
+                this,
+                "Not Find because ${task.exception?.message} ",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+    return jsonString
+}*/
+
+/*
+           fun getTalkingList(ind:Int): ArrayList<Talker> {
+               talkList= arrayListOf()
+
+               Log.d("clima","one")
+               val jsonString=retriveDataFromFirebase()
+
+               *//*var talkList1: ArrayList<Talker>
+        val gson = Gson()
+       // val jsonString = myPref.getString(TALKLIST, null)
+        val jsonString = myPref.getString(TALKLIST, null)*//*
+
+        if (ind==0 || jsonString == null) {
+            talkList=createTalkListFromTheStart()
+            saveData(talkList)
+        } else {
+            createTalkArray(jsonString)
+
+            *//*val type = object : TypeToken<ArrayList<Talker>>() {}.type
+            talkList1 = gson.fromJson(jsonString, type)*//*
+        }
+        return talkList
+    }*/
+
+/*  fun saveDataToExternalStorage(talkingList: ArrayList<Talker>) {
+           try {
+               myExternalFile = File(context.getExternalFilesDir(filepath), TALKLIST)
+
+           } catch (e: Exception) {
+               e.printStackTrace()
+           }
+           val gson = Gson()
+           val jsonString = gson.toJson(talkingList)
+
+
+           try {
+               val fileOutPutStream = FileOutputStream(myExternalFile)
+               fileOutPutStream.write(jsonString.toByteArray())
+               fileOutPutStream.close()
+           } catch (e: IOException) {
+               e.printStackTrace()
+           }
+           // Toast.makeText(applicationContext, "data save", Toast.LENGTH_SHORT).show()
+       }
+
+       fun getTalkingListFromExternalStorage(ind: Int): ArrayList<Talker> {
+           var talkList1: ArrayList<Talker> = arrayListOf()
+           var jsonString=""
+           val gson = Gson()
+           // myExternalFile = File(context.getExternalFilesDir(filepath), TALKLIST)
+
+           //storage/emulated/0/Android/data/com.example.yhaa18/files/MyFileStorage/talklist20
+           val st="/storage/emulated/0/Android/data/com.example.yhaa17/files/MyFileStorage"
+           val st1=st+"/talklist20"
+           myExternalFile = File(st, TALKLIST)
+
+
+           if (TALKLIST != null) {
+               var fileInputStream= FileInputStream(myExternalFile)
+               var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
+               val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
+               val stringBuilder: StringBuilder = StringBuilder()
+               var text: String? = null
+
+               while ({ text = bufferedReader.readLine(); text }() != null) {
+                   stringBuilder.append(text)
+               }
+               jsonString=stringBuilder.toString()
+
+               //      while ({ jsonString = bufferedReader.readLine(); text }() != null)
+
+               if (ind == 0 || jsonString == null) {
+                   talkList1 = createTalkListFromTheStart()
+                   saveData(talkList1)
+
+               } else {
+                   val type = object : TypeToken<ArrayList<Talker>>() {}.type
+                   talkList1 = gson.fromJson(jsonString, type)
+               }
+
+               //           fileInputStream.close()
+           }
+
+           return talkList1
+
+       }*/
 
 
