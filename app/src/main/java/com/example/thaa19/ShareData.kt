@@ -4,33 +4,43 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.thaa19.Helper.Companion.ASSEETS_FILE
+import com.example.thaa19.Helper.Companion.CURRENT_SPEAKER
+import com.example.thaa19.Helper.Companion.PREFS_NAME
+import com.example.thaa19.Helper.Companion.TALKLIST
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.*
 
 
-    class ShareData(val context: Context, val fileNum:Int) : AppCompatActivity() {
+    class ShareData(val context: Context) : AppCompatActivity() {
 
-        val TALKLIST="talklist"+fileNum.toString()
+
         lateinit var talkList: ArrayList<Talker>
-        lateinit var operateList: ArrayList<List<Int>>
 
-        var myPref: SharedPreferences
-        var editor: SharedPreferences.Editor
+         var myPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        var editor= myPref.edit()
+
 
         init {
-            myPref= PreferenceManager.getDefaultSharedPreferences(context)
-            editor = myPref.edit()
+            //myPref= PreferenceManager.getDefaultSharedPreferences(context)
+          //  editor = myPref.edit()
+
+
+           /* myPref = getSharedPreferences(PREFS_NAME, 0)
+            editor = myPref.edit()*/
+
+
         }
+
+
 
         private val filepath = "MyFileStorage"
         internal var myExternalFile: File? = null
 
 
-        fun getTalkingList(ind:Int): ArrayList<Talker> {
+        fun getTalkingListFromPref(ind:Int): ArrayList<Talker> {
             val talkList1: ArrayList<Talker>
             val gson = Gson()
             // val jsonString = myPref.getString(TALKLIST, null)
@@ -38,7 +48,7 @@ import java.io.*
 
             if (ind==0 || jsonString == null) {
                 talkList1=createTalkListFromTheStart()
-                saveData(talkList1)
+                saveTalkingListInPref(talkList1)
 
             } else {
                 val type = object : TypeToken<ArrayList<Talker>>() {}.type
@@ -47,21 +57,26 @@ import java.io.*
             //   talkList1=improveTalkList(talkList1)
             return talkList1
         }
-        fun saveData(talkingList:ArrayList<Talker>) {
+        fun saveTalkingListInPref(talkingList:ArrayList<Talker>) {
             val gson = Gson()
             val jsonString = gson.toJson(talkingList)
             editor.putString(TALKLIST, jsonString)
             editor.apply()
         }
+        fun savePage(page:Int){
+            editor.putInt(CURRENT_SPEAKER, page)
+            editor.commit()
+        }
+        fun getPage():Int = myPref.getInt(CURRENT_SPEAKER, 1)
 
         fun createTalkListFromTheStart(): ArrayList<Talker> {
             var talkList1 = arrayListOf<Talker>()
             val ADAM = "-אדם-"
             val GOD = "-אלוהים-"
-            val CURRENT_FILE = "text/text"+fileNum.toString()+".txt"
+            val currenteFile = "text/text"+ ASSEETS_FILE.toString()+".txt"
 
             var countItem = 0
-            var text = context.assets.open(CURRENT_FILE).bufferedReader().use {
+            var text = context.assets.open(currenteFile).bufferedReader().use {
                 it.readText()
             }
             text = text.replace("\r", "")

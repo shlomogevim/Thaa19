@@ -11,10 +11,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.thaa19.AnimationScreen.Companion.FILE_NUM
-import com.example.thaa19.AnimationScreen.Companion.JSONSTRING
-import com.example.thaa19.AnimationScreen.Companion.REQEST_CODE
-import com.example.thaa19.AnimationScreen.Companion.STARTALK
+import com.example.thaa19.Helper.Companion.CURRENT_VERSIA
+import com.example.thaa19.Helper.Companion.FILE_NUM
+import com.example.thaa19.Helper.Companion.JSONSTRING
+import com.example.thaa19.Helper.Companion.PREFS_NAME
+import com.example.thaa19.Helper.Companion.REQEST_CODE
+import com.example.thaa19.Helper.Companion.TALKLIST
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -22,7 +24,7 @@ import com.google.gson.reflect.TypeToken
 class MainActivity : AppCompatActivity() {
 
 
-    val CURRENT_NUM = 20
+   // val TALKLIST="talklist20"
 
     private var convList: ArrayList<Conversation>? = null
     private var adapter: ConvListAtapter? = null
@@ -30,10 +32,9 @@ class MainActivity : AppCompatActivity() {
     var talkList=ArrayList<Talker>()
     var jsonString=""
 
-    val PREFS_NAME = "myPrefs"
+    //val PREFS_NAME = "myPrefs"
     lateinit var myPref: SharedPreferences
-
-
+   // lateinit var helper:Helper
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         //  setContentView(R.layout.activity_main)
 
-        val TALKLIST="talklist"+CURRENT_NUM.toString()
+        // helper=Helper(this)
+
+
+
         myPref = getSharedPreferences(PREFS_NAME, 0)
         val jsonString = myPref.getString(TALKLIST, null)
         if (jsonString==null) {
@@ -161,7 +165,7 @@ class MainActivity : AppCompatActivity() {
 
 
          if ((requestCode== REQEST_CODE) && (resultCode== Activity.RESULT_OK)){
-             val versia= data?.extras?.getInt(AnimationScreen.CURRENT_VERSIA,0)
+             val versia= data?.extras?.getInt(CURRENT_VERSIA,0)
              val jsonString= data?.getStringExtra(JSONSTRING)
              versia?.let { storeJsonStringInTheFirebase(it,jsonString) }
          }
