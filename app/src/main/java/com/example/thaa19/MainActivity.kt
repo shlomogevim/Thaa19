@@ -1,7 +1,9 @@
 package com.example.thaa19
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thaa19.AnimationScreen.Companion.FILE_NUM
 import com.example.thaa19.AnimationScreen.Companion.JSONSTRING
+import com.example.thaa19.AnimationScreen.Companion.REQEST_CODE
 import com.example.thaa19.AnimationScreen.Companion.STARTALK
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
@@ -59,11 +62,11 @@ class MainActivity : AppCompatActivity() {
                  operateConverastion(Conversation(1,"stam","stam")) */
     }
     private fun createJustFirstTalk() {
-        val intent = Intent(
-            this, AnimationScreen::class.java)
+        val intent = Intent(this, AnimationScreen::class.java)
         intent.putExtra(FILE_NUM, 20)
         intent.putExtra(JSONSTRING,jsonString)
-        startActivity(intent)
+       //startActivity(intent)
+        startActivityForResult(intent, REQEST_CODE)
     }
 
     private fun retriveDataFromFirebase() {
@@ -146,6 +149,65 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, AnimationScreen::class.java)
         intent.putExtra(FILE_NUM, CURRENT_NUM)
         startActivity(intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val message= data?.getStringExtra("mes")
+        Log.d("clima","Reqest code = " + requestCode)
+        Log.d("clima","Result code = " + resultCode)
+        Log.d("clima","Message returned = " + message)
+
+
+         if ((requestCode== REQEST_CODE) && (resultCode== Activity.RESULT_OK)){
+             val versia= data?.extras?.getInt(AnimationScreen.CURRENT_VERSIA,0)
+             val jsonString= data?.getStringExtra(JSONSTRING)
+             versia?.let { storeJsonStringInTheFirebase(it,jsonString) }
+         }
+
+
+    }
+
+
+
+    /*
+    * @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        String messageReturned = data.getStringExtra("message_return");
+
+        System.out.println("Result code = " + resultCode);
+        System.out.println("Message returned = " + messageReturned);
+
+    }*/
+
+    private fun storeJsonStringInTheFirebase(versia: Int, jsonString: String?) {
+
+
+        var db = FirebaseFirestore.getInstance()
+        var talker = HashMap<String, Any>()
+
+
+        talker.put("index",versia.toString())
+        jsonString?.let { talker.put("main", it) }
+        db.collection("talker1").document(versia.toString()).set(talker).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "Saving is succsses", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Not Save because \${task.exception?.message",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+
+
+
+
+
     }
 }
 

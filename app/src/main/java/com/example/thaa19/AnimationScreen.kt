@@ -21,18 +21,16 @@ import kotlinx.android.synthetic.main.helper_view_layout.*
 
 class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
-    var SHOW_POSITION: Boolean = true// *************
+    var SHOW_POSITION: Boolean = false// *************
 
     companion object {
         const val FILE_NUM = "file_num"
         const val JSONSTRING = "jsonString"
         const val STARTALK = "start"
+        const val REQEST_CODE=12
+        const val CURRENT_VERSIA="currentversia"
     }
-
-    var talkList = ArrayList<Talker>()
-    lateinit var textTalkList: ArrayList<Talker>
-    lateinit var spicalTalkList: ArrayList<Talker>
-
+     var talkList = ArrayList<Talker>()
 
     var currentFileNum = 20
     var STORELIST = "storelist"
@@ -69,6 +67,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_animation_screen)
+
         setLayoutShowMode()
 
 
@@ -82,6 +81,26 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
         moveTheAnimation()     // Let's play
     }
+
+
+   /* override fun finish() {
+        val gson = Gson()
+        val jsonString = gson.toJson(talkList)
+        val intent=Intent()
+        intent.putExtra(CURRENT_VERSIA, 5)
+        intent.putExtra(JSONSTRING,jsonString)
+        super.finish()
+    }*/
+    private fun enterDataToFirebase() {
+        val gson = Gson()
+        val jsonString = gson.toJson(talkList)
+        val intent=Intent()
+        intent.putExtra(CURRENT_VERSIA, 5)
+        intent.putExtra(JSONSTRING,jsonString)
+        setResult(Activity.RESULT_OK,intent)
+        finish()
+    }
+
 
     private fun setLayoutShowMode() {
         if (SHOW_POSITION) {
@@ -298,10 +317,11 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun createParaList() {
-        for (i in 0..6) {
+        for (i in 0..5) {
             paraList.add("-")
         }
         val list = arrayListOf(
+            "Firebase",
             "Start",
             "-",
             "Swing1",
@@ -336,6 +356,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         var intv: Int
         if (plusMode) intv = interval else intv = -interval
         when (position) {
+            6->enterDataToFirebase()
             7 -> initIt()
             9 -> changeSwingRepeat(1)
             10 -> enterNewCounterStep()
@@ -354,6 +375,8 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         chkNewData()
         if (position != 10) moveTheAnimation()
     }
+
+
 
     private fun chkNewData() {
         with(talkList[counterStep]) {
