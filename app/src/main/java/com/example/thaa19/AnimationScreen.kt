@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -21,22 +23,19 @@ import kotlinx.android.synthetic.main.helper_view_layout.*
 
 class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
-    var SHOW_POSITION: Boolean = false// *************
-
     companion object {
         const val FILE_NUM = "file_num"
         const val JSONSTRING = "jsonString"
         const val STARTALK = "start"
-        const val REQEST_CODE=12
-        const val CURRENT_VERSIA="currentversia"
+        const val REQEST_CODE = 12
+        const val CURRENT_VERSIA = "currentversia"
     }
-     var talkList = ArrayList<Talker>()
 
+    var talkList = ArrayList<Talker>()
     var currentFileNum = 20
     var STORELIST = "storelist"
 
     lateinit var sharData: ShareData
-
 
     var current_styleNum = 10
     var current_animNum = 10
@@ -63,10 +62,16 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     var interval = 0
     var currentColor = "#stam"
     lateinit var lastTalker: Talker
+    var TEST_POSITION: Boolean = true
+    var SHOW_POSITION: Boolean = false
+    var PUBLISH_POSITION: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_animation_screen)
+
+        setPosition(1)
 
         setLayoutShowMode()
 
@@ -82,69 +87,80 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         moveTheAnimation()     // Let's play
     }
 
-
-   /* override fun finish() {
-        val gson = Gson()
-        val jsonString = gson.toJson(talkList)
-        val intent=Intent()
-        intent.putExtra(CURRENT_VERSIA, 5)
-        intent.putExtra(JSONSTRING,jsonString)
-        super.finish()
-    }*/
-    private fun enterDataToFirebase() {
-        val gson = Gson()
-        val jsonString = gson.toJson(talkList)
-        val intent=Intent()
-        intent.putExtra(CURRENT_VERSIA, 5)
-        intent.putExtra(JSONSTRING,jsonString)
-        setResult(Activity.RESULT_OK,intent)
-        finish()
-    }
-
-
-    private fun setLayoutShowMode() {
-        if (SHOW_POSITION) {
-            plusAndMinusBtn.text = "Start"
-            lastTalker_button.text = "Test"
-            saveButton.text = "----"
-            upper_layout.visibility = View.INVISIBLE
-            style_ListView.visibility = View.INVISIBLE
-            para_ListView.visibility = View.INVISIBLE
-            ttPara_listView.visibility = View.INVISIBLE
-            action_ListView.visibility = View.INVISIBLE
-
-        } else {
-            plusAndMinusBtn.text = "+"
-            lastTalker_button.text = "Last"
-            saveButton.text = "Save"
-            upper_layout.visibility = View.VISIBLE
-            style_ListView.visibility = View.VISIBLE
-            para_ListView.visibility = View.VISIBLE
-            ttPara_listView.visibility = View.VISIBLE
-            action_ListView.visibility = View.VISIBLE
+    private fun setPosition(ind: Int) {
+        if (ind == 1) {
+            TEST_POSITION = true
+            SHOW_POSITION = false
+            PUBLISH_POSITION = false
+        }
+        if (ind == 2) {
+            TEST_POSITION = false
+            SHOW_POSITION = true
+            PUBLISH_POSITION = false
+        }
+        if (ind == 3) {
+            TEST_POSITION = false
+            SHOW_POSITION = false
+            PUBLISH_POSITION = true
         }
     }
 
-    override fun onClick(v: View) {
+    private fun enterDataToFirebase() {
+        val gson = Gson()
+        val jsonString = gson.toJson(talkList)
+        val intent = Intent()
+        intent.putExtra(CURRENT_VERSIA, 5)
+        intent.putExtra(JSONSTRING, jsonString)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    private fun setLayoutShowMode() {
+        if (TEST_POSITION) {
+            plusAndMinusBtn.text = "+"
+            lastTalker_button.text = "Last"
+            saveButton.text = "Save"
+            upper_layout.visibility = VISIBLE
+            style_ListView.visibility = VISIBLE
+            para_ListView.visibility = VISIBLE
+            ttPara_listView.visibility =VISIBLE
+            action_ListView.visibility = VISIBLE
+            tvAnimatinKind.visibility= VISIBLE
+
+        }
         if (SHOW_POSITION) {
-            when (v.id) {
-                R.id.plusAndMinusBtn -> {
-                    initIt()
-                }
-                R.id.saveButton -> saveIt()
-                R.id.nextButton -> nextIt()
-                R.id.lastTalker_button -> {
-                    SHOW_POSITION = false
-                    setLayoutShowMode()
-                }
-                else -> moveTheAnimation()
-            }
-        }else {
+            plusAndMinusBtn.text = "Start"
+            lastTalker_button.text = "Test"
+            saveButton.text = "PUB"
+            upper_layout.visibility = INVISIBLE
+            style_ListView.visibility = INVISIBLE
+            para_ListView.visibility = INVISIBLE
+            ttPara_listView.visibility = INVISIBLE
+            action_ListView.visibility = INVISIBLE
+            tvAnimatinKind.visibility= INVISIBLE
+        }
+        if (PUBLISH_POSITION) {
+            plusAndMinusBtn.text = "Start"
+            lastTalker_button.text = "---"
+            saveButton.text = "TEST"
+            upper_layout.visibility = INVISIBLE
+            style_ListView.visibility = INVISIBLE
+            para_ListView.visibility = INVISIBLE
+            ttPara_listView.visibility = INVISIBLE
+            action_ListView.visibility = INVISIBLE
+            tvAnimatinKind.visibility= INVISIBLE
+
+        }
+
+    }
+
+    override fun onClick(v: View) {
+        if (TEST_POSITION) {
             when (v.id) {
                 R.id.textRevBtn -> readAgainTextFile()
                 R.id.newPageBtn -> enterNewCounterStep()
                 R.id.toShowModeBtn -> {
-                    SHOW_POSITION = true
+                    setPosition(2)
                     setLayoutShowMode()
                 }
                 R.id.plusAndMinusBtn -> changePlusMinusMode()
@@ -154,10 +170,47 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
                 R.id.previousButton -> previousIt()
                 R.id.lastTalker_button -> retriveLastTalker()
                 R.id.reSizeTextBtn -> minTextSize()
+                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.VISIBLE
+                else -> moveTheAnimation()
+            }
+            return
+        }
+        if (SHOW_POSITION) {
+            when (v.id) {
+                R.id.plusAndMinusBtn -> {
+                    initIt()
+                }
+                R.id.lastTalker_button -> {
+                    setPosition(1)
+                    setLayoutShowMode()
+                }
+                R.id.saveButton -> {
+                    setPosition(3)
+                    setLayoutShowMode()
+                }
+                R.id.nextButton -> nextIt()
+
+                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE
+                else -> moveTheAnimation()
+            }
+            return
+        }
+        if (PUBLISH_POSITION) {
+            when (v.id) {
+                R.id.plusAndMinusBtn -> {
+                    initIt()
+                }
+                R.id.saveButton -> {
+                    setPosition(1)
+                    setLayoutShowMode()
+                }
+                R.id.nextButton -> nextIt()
+                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE
                 else -> moveTheAnimation()
             }
         }
     }
+
     private fun initButton() {
         displayAgainBtn.setOnClickListener { onClick(displayAgainBtn) }
         textRevBtn.setOnClickListener { onClick(textRevBtn) }
@@ -170,6 +223,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         reSizeTextBtn.setOnClickListener { onClick(reSizeTextBtn) }
         toShowModeBtn.setOnClickListener { onClick(toShowModeBtn) }
     }
+
     private fun setupParams() {
         myPref = getSharedPreferences(PREFS_NAME, 0)
         editor = myPref.edit()
@@ -218,11 +272,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         } else {
             counterStep = myPref.getInt(CURRENT_SPEAKER, 1)
         }
-        if (SHOW_POSITION) {
-            toTheShowMode()
-        }
     }
-
 
     private fun prepareThisSection() {
 
@@ -259,7 +309,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
     private fun moveTheAnimation() {
         if (counterStep > 84) counterStep = 84
-        if (counterStep == 84 && SHOW_POSITION) {
+        if ((counterStep == 84 && SHOW_POSITION) || (counterStep == 84 && PUBLISH_POSITION)) {
             editor.putInt(CURRENT_SPEAKER, 1)
             editor.commit()
             finish()
@@ -356,7 +406,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         var intv: Int
         if (plusMode) intv = interval else intv = -interval
         when (position) {
-            6->enterDataToFirebase()
+            6 -> enterDataToFirebase()
             7 -> initIt()
             9 -> changeSwingRepeat(1)
             10 -> enterNewCounterStep()
@@ -375,7 +425,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         chkNewData()
         if (position != 10) moveTheAnimation()
     }
-
 
 
     private fun chkNewData() {
@@ -642,17 +691,17 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
     private fun showEditText(ind: Int) {
         if (ind == 0) {
-            style_ListView.visibility = View.INVISIBLE
-            para_ListView.visibility = View.INVISIBLE
-            ttPara_listView.visibility = View.INVISIBLE
-            action_ListView.visibility = View.INVISIBLE
+            style_ListView.visibility = INVISIBLE
+            para_ListView.visibility = INVISIBLE
+            ttPara_listView.visibility = INVISIBLE
+            action_ListView.visibility = INVISIBLE
             pageNumEditText.visibility = View.VISIBLE
         } else {
             style_ListView.visibility = View.VISIBLE
             para_ListView.visibility = View.VISIBLE
             ttPara_listView.visibility = View.VISIBLE
             action_ListView.visibility = View.VISIBLE
-            pageNumEditText.visibility = View.INVISIBLE
+            pageNumEditText.visibility = INVISIBLE
             pageNumEditText.hideKeyboard()
         }
 
@@ -706,10 +755,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    private fun toTheShowMode() {
-
-
-    }
 
     private fun findStyleObject(index: Int): StyleObject {
         var style1 = StyleObject()

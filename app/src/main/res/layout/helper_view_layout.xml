@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Read Text"
+            android:text="Read T."
             android:textSize="10sp" />
 
 
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Mini Text"
+            android:text="Mini T."
             android:textSize="10sp"
             android:visibility="visible" />
 
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="New Page"
+            android:text="New Pa."
             android:textSize="10sp" />
 
         <Button
