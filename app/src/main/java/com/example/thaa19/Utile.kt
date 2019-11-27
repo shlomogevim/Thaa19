@@ -428,7 +428,8 @@ package com.example.thaa19
             }
         }
 
-        fun apeareOneAfterAnother(arr: ArrayList<TextView?>, dur: Long) {
+        fun apeareOneAfterAnother(arr: ArrayList<TextView?>,talker: Talker) {
+            val dur=talker.dur
             if (arr.size == 1) {
                 ViewAnimator
                     .animate(arr[0])
@@ -634,11 +635,10 @@ package com.example.thaa19
 
 
         fun godAppearFromTwoPlaces(
-            ind: Int,
+            ind: Int,talker: Talker,
             arr: ArrayList<TextView?>,
             arr1: ArrayList<TextView?>,
-            color: String,
-            dur: Long
+            arr2: ArrayList<TextView?>
         ) {
 
             if (ind == 0) {
@@ -651,11 +651,11 @@ package com.example.thaa19
                     .translationX(wi / 2, 0f)
                     .translationY(hi, 0f)
                     .scale(0f, 1f)
-                    .duration(dur)
+                    .duration(talker.dur)
                     .start()
             }
             if (ind == 1) {
-                arr[0]?.setBackgroundColor(Color.TRANSPARENT)
+                arr[0]?.setBackgroundColor(Color.TRANSPARENT)         // begining just the text
                 arr1[0]?.setBackgroundColor(Color.TRANSPARENT)
                 ViewAnimator
                     .animate(arr[0])
@@ -666,9 +666,31 @@ package com.example.thaa19
                     .translationX(wi / 2, 0f)
                     .translationY(hi, 0f)
                     .scale(0f, 1f)
-                    .duration(dur)
-                    .thenAnimate(arr[0])
-                    .backgroundColor(Color.parseColor(color))
+                    .duration(talker.dur)
+                    .thenAnimate(arr2[0])
+                    .scale(0f, 1f)
+                    .duration(1)
+                    .thenAnimate(arr2[0])
+                    .alpha(0f,1f)
+                    .duration(3000)
+                    .start()
+
+            }
+            if (ind == 2) {
+                arr[0]?.setBackgroundColor(Color.TRANSPARENT)         // only the text appear
+                arr1[0]?.setBackgroundColor(Color.TRANSPARENT)
+                ViewAnimator
+                    .animate(arr[0])
+                    .translationX(-wi / 2, 0f)
+                    .translationY(hi, 0f)
+                    .scale(0f, 1f)
+                    .andAnimate(arr1[0])
+                    .translationX(wi / 2, 0f)
+                    .translationY(hi, 0f)
+                    .scale(0f, 1f)
+                    .duration(talker.dur)
+                    // .thenAnimate(arr[0])
+                    // .backgroundColor(Color.parseColor(talker.colorBack))
                     .duration(2000)
                     .start()
             }
@@ -676,7 +698,7 @@ package com.example.thaa19
 
         }
 
-/*  fun ללללmove_scale(selector: Int, talker: Talker, arr: ArrayList<TextView?>, dur: Long) {
+/*  fun move_scale(selector: Int, talker: Talker, arr: ArrayList<TextView?>, dur: Long) {
 
         val linesNum = talker.lines
         if (selector == 0) {

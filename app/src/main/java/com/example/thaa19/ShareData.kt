@@ -19,25 +19,34 @@ import java.io.*
 
         lateinit var talkList: ArrayList<Talker>
 
-         var myPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+        /* myPref = getSharedPreferences(PREFS_NAME, 0)
+        val jsonString = myPref.getString(TALKLIST, null)
+            // val jsonString=shar.getGsonString()
+        */
+
+
+
+
+
+
+
+      //  var myPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+
+        var myPref=context.getSharedPreferences(PREFS_NAME,0)
         var editor= myPref.edit()
 
 
-        init {
-            //myPref= PreferenceManager.getDefaultSharedPreferences(context)
-          //  editor = myPref.edit()
 
 
-           /* myPref = getSharedPreferences(PREFS_NAME, 0)
-            editor = myPref.edit()*/
-
-
+        fun savePage(page:Int){
+            editor.putInt(CURRENT_SPEAKER, page)
+            editor.commit()
         }
+        fun getPage():Int = myPref.getInt(CURRENT_SPEAKER, 1)
 
-
-
-        private val filepath = "MyFileStorage"
-        internal var myExternalFile: File? = null
+        fun getGsonString() = myPref.getString(TALKLIST, null)
 
 
         fun getTalkingListFromPref(ind:Int): ArrayList<Talker> {
@@ -57,19 +66,22 @@ import java.io.*
             //   talkList1=improveTalkList(talkList1)
             return talkList1
         }
+
         fun saveTalkingListInPref(talkingList:ArrayList<Talker>) {
             val gson = Gson()
             val jsonString = gson.toJson(talkingList)
             editor.putString(TALKLIST, jsonString)
-            editor.apply()
-        }
-        fun savePage(page:Int){
-            editor.putInt(CURRENT_SPEAKER, page)
             editor.commit()
         }
-        fun getPage():Int = myPref.getInt(CURRENT_SPEAKER, 1)
 
-        fun createTalkListFromTheStart(): ArrayList<Talker> {
+        fun saveJsonString(jsonS:String?){
+            editor.putString(TALKLIST, jsonS)
+            editor.commit()
+        }
+
+
+
+       fun createTalkListFromTheStart(): ArrayList<Talker> {
             var talkList1 = arrayListOf<Talker>()
             val ADAM = "-אדם-"
             val GOD = "-אלוהים-"
@@ -151,117 +163,4 @@ import java.io.*
         }
 
     }
-
-/*private fun retriveDataFromFirebase():String {
-    var jsonString=""
-
-    var db = FirebaseFirestore.getInstance()
-    Log.d("clima","db="+db.toString())
-    db.collection("talker1").document("3").get().addOnCompleteListener { task ->
-
-        Log.d("clima","inside")
-        if (task.result?.exists()!!) {
-            jsonString = task.result!!.getString("main").toString()
-
-            createTalkArray(jsonString)
-
-            Toast.makeText(this, "Find", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(
-                this,
-                "Not Find because ${task.exception?.message} ",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-    return jsonString
-}*/
-
-/*
-           fun getTalkingList(ind:Int): ArrayList<Talker> {
-               talkList= arrayListOf()
-
-               Log.d("clima","one")
-               val jsonString=retriveDataFromFirebase()
-
-               *//*var talkList1: ArrayList<Talker>
-        val gson = Gson()
-       // val jsonString = myPref.getString(TALKLIST, null)
-        val jsonString = myPref.getString(TALKLIST, null)*//*
-
-        if (ind==0 || jsonString == null) {
-            talkList=createTalkListFromTheStart()
-            saveData(talkList)
-        } else {
-            createTalkArray(jsonString)
-
-            *//*val type = object : TypeToken<ArrayList<Talker>>() {}.type
-            talkList1 = gson.fromJson(jsonString, type)*//*
-        }
-        return talkList
-    }*/
-
-/*  fun saveDataToExternalStorage(talkingList: ArrayList<Talker>) {
-           try {
-               myExternalFile = File(context.getExternalFilesDir(filepath), TALKLIST)
-
-           } catch (e: Exception) {
-               e.printStackTrace()
-           }
-           val gson = Gson()
-           val jsonString = gson.toJson(talkingList)
-
-
-           try {
-               val fileOutPutStream = FileOutputStream(myExternalFile)
-               fileOutPutStream.write(jsonString.toByteArray())
-               fileOutPutStream.close()
-           } catch (e: IOException) {
-               e.printStackTrace()
-           }
-           // Toast.makeText(applicationContext, "data save", Toast.LENGTH_SHORT).show()
-       }
-
-       fun getTalkingListFromExternalStorage(ind: Int): ArrayList<Talker> {
-           var talkList1: ArrayList<Talker> = arrayListOf()
-           var jsonString=""
-           val gson = Gson()
-           // myExternalFile = File(context.getExternalFilesDir(filepath), TALKLIST)
-
-           //storage/emulated/0/Android/data/com.example.yhaa18/files/MyFileStorage/talklist20
-           val st="/storage/emulated/0/Android/data/com.example.yhaa17/files/MyFileStorage"
-           val st1=st+"/talklist20"
-           myExternalFile = File(st, TALKLIST)
-
-
-           if (TALKLIST != null) {
-               var fileInputStream= FileInputStream(myExternalFile)
-               var inputStreamReader: InputStreamReader = InputStreamReader(fileInputStream)
-               val bufferedReader: BufferedReader = BufferedReader(inputStreamReader)
-               val stringBuilder: StringBuilder = StringBuilder()
-               var text: String? = null
-
-               while ({ text = bufferedReader.readLine(); text }() != null) {
-                   stringBuilder.append(text)
-               }
-               jsonString=stringBuilder.toString()
-
-               //      while ({ jsonString = bufferedReader.readLine(); text }() != null)
-
-               if (ind == 0 || jsonString == null) {
-                   talkList1 = createTalkListFromTheStart()
-                   saveData(talkList1)
-
-               } else {
-                   val type = object : TypeToken<ArrayList<Talker>>() {}.type
-                   talkList1 = gson.fromJson(jsonString, type)
-               }
-
-               //           fileInputStream.close()
-           }
-
-           return talkList1
-
-       }*/
-
 

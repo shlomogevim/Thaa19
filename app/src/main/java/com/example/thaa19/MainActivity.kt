@@ -3,12 +3,11 @@ package com.example.thaa19
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.thaa19.Helper.Companion.CURRENT_VERSIA
@@ -20,71 +19,75 @@ import com.example.thaa19.Helper.Companion.TALKLIST
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
 
-   // val TALKLIST="talklist20"
+    // val TALKLIST="talklist20"
 
     private var convList: ArrayList<Conversation>? = null
     private var adapter: ConvListAtapter? = null
     private var layoutManger: RecyclerView.LayoutManager? = null
-    var talkList=ArrayList<Talker>()
-    var jsonString=""
+    var talkList = ArrayList<Talker>()
+
+    lateinit var shar: ShareData
 
     //val PREFS_NAME = "myPrefs"
-    lateinit var myPref: SharedPreferences
-   // lateinit var helper:Helper
+    //lateinit var myPref: SharedPreferences
+    // lateinit var helper:Helper
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         //  setContentView(R.layout.activity_main)
 
-        // helper=Helper(this)
+        shar = ShareData(this)
+
+/*
+         myPref = getSharedPreferences(PREFS_NAME, 0)
+         val jsonString = myPref.getString(TALKLIST, null)
+*/
 
 
+       var jsonS = shar.getGsonString()
 
-        myPref = getSharedPreferences(PREFS_NAME, 0)
-        val jsonString = myPref.getString(TALKLIST, null)
-        if (jsonString==null) {
-            retriveDataFromFirebase()
+       // jsonString=null
+
+
+        if (jsonS != null) {
+            createJustFirstTalk(jsonS)
+        } else {
+            jsonS=retriveDataFromFirebase()
 
             Handler().postDelayed(
                 {
-                    createJustFirstTalk()
+                    shar.saveJsonString(jsonS)
+                    createJustFirstTalk(jsonS)
                 }, 5000
             )
         }
 
-        /*     initAll()
-                  recyclerView.layoutManager = layoutManger
-                 recyclerView.adapter = adapter
-                 adapter!!.notifyDataSetChanged()
-
-                 operateConverastion(Conversation(1,"stam","stam")) */
+       // initPara()
     }
-    private fun createJustFirstTalk() {
+
+    private fun createJustFirstTalk(jsonS: String?) {
         val intent = Intent(this, AnimationScreen::class.java)
-        intent.putExtra(FILE_NUM, 20)
-        intent.putExtra(JSONSTRING,jsonString)
-       //startActivity(intent)
+        intent.putExtra(JSONSTRING, jsonS)
         startActivityForResult(intent, REQEST_CODE)
     }
 
-    private fun retriveDataFromFirebase() {
+    private fun retriveDataFromFirebase():String {
+        var jsonS=""
 
         var db = FirebaseFirestore.getInstance()
         db.collection("talker1").document("3").get().addOnCompleteListener { task ->
 
             if (task.result?.exists()!!) {
-                jsonString = task.result!!.getString("main")!!
+                jsonS = task.result!!.getString("main")!!
 
-
-                // createTalkArray(jsonString)
             } else {
-                jsonString="none"
+                jsonS = "none"
                 Toast.makeText(
                     this,
                     "Not Find because ${task.exception?.message} ",
@@ -92,18 +95,29 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+        return jsonS
     }
 
-    private fun createTalkArray(jsonString: String?) {
-        //  Log.d("clima",jsonString)
+
+
+
+
+    private fun initPara() {
+        initAll()
+        recyclerView.layoutManager = layoutManger
+        recyclerView.adapter = adapter
+        adapter!!.notifyDataSetChanged()
+
+        operateConverastion(Conversation(1,"stam","stam"))
+    }
+    private fun createTalkArray(jsonS: String?) {
+        //  Log.d("clima",jsonS)
         val gson = Gson()
         val type = object : TypeToken<ArrayList<Talker>>() {}.type
-        talkList = gson.fromJson(jsonString, type)
-        Log.d("clima","${talkList[17].taking}")
+        talkList = gson.fromJson(jsonS, type)
+        Log.d("clima", "${talkList[17].taking}")
 
     }
-
-
 
     private fun initAll() {
         convList = arrayListOf()
@@ -157,22 +171,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val jsonS=""
 
-        val message= data?.getStringExtra("mes")
-        Log.d("clima","Reqest code = " + requestCode)
-        Log.d("clima","Result code = " + resultCode)
-        Log.d("clima","Message returned = " + message)
+        val message = data?.getStringExtra("mes")
+        Log.d("clima", "Reqest code = " + requestCode)
+        Log.d("clima", "Result code = " + resultCode)
+        Log.d("clima", "Message returned = " + message)
 
 
-         if ((requestCode== REQEST_CODE) && (resultCode== Activity.RESULT_OK)){
-             val versia= data?.extras?.getInt(CURRENT_VERSIA,0)
-             val jsonString= data?.getStringExtra(JSONSTRING)
-             versia?.let { storeJsonStringInTheFirebase(it,jsonString) }
-         }
+        if ((requestCode == REQEST_CODE) && (resultCode == Activity.RESULT_OK)) {
+            val versia = data?.extras?.getInt(CURRENT_VERSIA, 0)
+            val jsonS = data?.getStringExtra(JSONSTRING)
+            versia?.let { storeJsonStringInTheFirebase(it, jsonS) }
+        }
 
 
     }
-
 
 
     /*
@@ -186,37 +200,31 @@ class MainActivity : AppCompatActivity() {
 
     }*/
 
-    private fun storeJsonStringInTheFirebase(versia: Int, jsonString: String?) {
+    private fun storeJsonStringInTheFirebase(versia: Int, jsonS: String?) {
 
 
         var db = FirebaseFirestore.getInstance()
         var talker = HashMap<String, Any>()
 
 
-        talker.put("index",versia.toString())
-        jsonString?.let { talker.put("main", it) }
-        db.collection("talker1").document(versia.toString()).set(talker).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Toast.makeText(this, "Saving is succsses", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(
-                    this,
-                    "Not Save because \${task.exception?.message",
-                    Toast.LENGTH_LONG
-                ).show()
+        talker.put("index", versia.toString())
+        jsonS?.let { talker.put("main", it) }
+        db.collection("talker1").document(versia.toString()).set(talker)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Saving is succsses", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Not Save because \${task.exception?.message",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-        }
-
-
-
-
 
 
     }
 }
-
-
-
 
 
 /* val CURRENT_NUM = 20

@@ -3,7 +3,6 @@ package com.example.thaa19
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
@@ -15,11 +14,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.thaa19.Helper.Companion.CURRENT_SPEAKER
 import com.example.thaa19.Helper.Companion.CURRENT_VERSIA
 import com.example.thaa19.Helper.Companion.FILE_NUM
 import com.example.thaa19.Helper.Companion.JSONSTRING
-import com.example.thaa19.Helper.Companion.STARTALK
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_animation_screen.*
@@ -38,8 +35,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     }*/
 
     var talkList = ArrayList<Talker>()
-    var currentFileNum = 20
-    var STORELIST = "storelist"
+   // var currentFileNum = 20
 
     lateinit var sharData: ShareData
 
@@ -55,11 +51,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     lateinit var animationInAction: AnimationAction
 
     lateinit var activatApp: ActivateApp
-
-    val PREFS_NAME = "myPrefs"
-
-   /* lateinit var myPref: SharedPreferences
-    lateinit var editor: SharedPreferences.Editor*/
 
     var styleList = arrayListOf<String>()
     var paraList = arrayListOf<String>()
@@ -94,12 +85,13 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         /*myPref = getSharedPreferences(PREFS_NAME, 0)
         editor = myPref.edit()*/
 
-        currentFileNum = intent.getIntExtra(FILE_NUM, 0)
+     //   currentFileNum = intent.getIntExtra(FILE_NUM, 0)
         sharData = ShareData(this)
         activatApp = ActivateApp(this)
         animationInAction = AnimationAction(this, mainLayout)
-        counterStep=sharData.getPage()
+        counterStep = sharData.getPage()
     }
+
     private fun setPosition(ind: Int) {
         if (ind == 1) {
             TEST_POSITION = true
@@ -137,9 +129,9 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             upper_layout.visibility = VISIBLE
             style_ListView.visibility = VISIBLE
             para_ListView.visibility = VISIBLE
-            ttPara_listView.visibility =VISIBLE
+            ttPara_listView.visibility = VISIBLE
             action_ListView.visibility = VISIBLE
-            tvAnimatinKind.visibility= VISIBLE
+            tvAnimatinKind.visibility = VISIBLE
 
         }
         if (SHOW_POSITION) {
@@ -151,7 +143,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             para_ListView.visibility = INVISIBLE
             ttPara_listView.visibility = INVISIBLE
             action_ListView.visibility = INVISIBLE
-            tvAnimatinKind.visibility= INVISIBLE
+            tvAnimatinKind.visibility = INVISIBLE
         }
         if (PUBLISH_POSITION) {
             plusAndMinusBtn.text = "Start"
@@ -162,7 +154,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             para_ListView.visibility = INVISIBLE
             ttPara_listView.visibility = INVISIBLE
             action_ListView.visibility = INVISIBLE
-            tvAnimatinKind.visibility= INVISIBLE
+            tvAnimatinKind.visibility = INVISIBLE
         }
     }
 
@@ -171,7 +163,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             when (v.id) {
                 R.id.textRevBtn -> readAgainTextFile()
                 R.id.newPageBtn -> enterNewCounterStep()
-                R.id.toShowModeBtn ->setPosition(2)
+                R.id.toShowModeBtn -> setPosition(2)
                 R.id.plusAndMinusBtn -> changePlusMinusMode()
                 R.id.displayAgainBtn -> moveTheAnimation()
                 R.id.saveButton -> saveIt()
@@ -186,8 +178,8 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         }
         if (SHOW_POSITION) {
             when (v.id) {
-                R.id.plusAndMinusBtn ->initIt()
-                R.id.lastTalker_button ->setPosition(1)
+                R.id.plusAndMinusBtn -> initIt()
+                R.id.lastTalker_button -> setPosition(1)
                 R.id.saveButton -> setPosition(3)
                 R.id.nextButton -> nextIt()
                 R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE
@@ -198,7 +190,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         if (PUBLISH_POSITION) {
             when (v.id) {
                 R.id.plusAndMinusBtn -> initIt()
-                R.id.saveButton ->setPosition(1)
+                R.id.saveButton -> setPosition(1)
                 R.id.nextButton -> nextIt()
                 R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE
                 else -> moveTheAnimation()
@@ -255,9 +247,9 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     private fun moveTheAnimation() {
         if (counterStep > 84) counterStep = 84
         if ((counterStep == 84 && SHOW_POSITION) || (counterStep == 84 && PUBLISH_POSITION)) {
-              counterStep=1
-           /* editor.putInt(CURRENT_SPEAKER, 1)
-            editor.commit()*/
+            counterStep = 1
+            /* editor.putInt(CURRENT_SPEAKER, 1)
+             editor.commit()*/
             finish()
         }
         updateTitleTalkerSituation()
@@ -271,28 +263,26 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         sharData.savePage(counterStep)
     }
 
-   /* private fun initValues() {
+    /* private fun initValues() {
 
-        val TALKLIST = "talklist" + currentFileNum.toString()
-        myPref = getSharedPreferences(PREFS_NAME, 0)
-        editor = myPref.edit()
+         val TALKLIST = "talklist" + currentFileNum.toString()
+         myPref = getSharedPreferences(PREFS_NAME, 0)
+         editor = myPref.edit()
 
-        val jsonS = myPref.getString(TALKLIST, null)
-        if (jsonS == null) {
-            talkList = sharData.getTalkingListFromPref(0)
-        }
+         val jsonS = myPref.getString(TALKLIST, null)
+         if (jsonS == null) {
+             talkList = sharData.getTalkingListFromPref(0)
+         }
 
-        val selector = myPref.getInt(STARTALK, 0)
-        if (selector == 0) {
-            counterStep == 1
-            editor.putInt(STARTALK, 1)
-            editor.commit()
-        } else {
-            counterStep = myPref.getInt(CURRENT_SPEAKER, 1)
-        }
-    }*/
-
-
+         val selector = myPref.getInt(STARTALK, 0)
+         if (selector == 0) {
+             counterStep == 1
+             editor.putInt(STARTALK, 1)
+             editor.commit()
+         } else {
+             counterStep = myPref.getInt(CURRENT_SPEAKER, 1)
+         }
+     }*/
 
 
     fun backGroundConfigration() {
@@ -309,7 +299,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             talkList[counterStep] = lastTalker.copy()
         }
     }
-
 
 
     //--------------
@@ -377,7 +366,8 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             "Bord Color",
             "Bord Line",
             "No Bord",
-            "Swing Re."
+            "Swing Re.",
+            "Radius"
         )
         paraList.addAll(list)
 
@@ -409,6 +399,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             22 -> changeBorderWidth(intv)
             23 -> talkList[counterStep].borderWidth = 0
             24 -> changeSwingRepeat(intv)
+            25->changeRadius(intv)
         }
         chkNewData()
         if (position != 10) moveTheAnimation()
@@ -421,7 +412,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             if (textSize < 8f) textSize = 8f
             if (dur > 10000f) dur = 10000
             if (dur < 100f) dur = 100
-            if (radius > 100f) radius = 100f
+          //  if (radius > 100f) radius = 100f
             if (radius < 2f) radius = 2f
             if (borderWidth > 70) borderWidth = 70
             if (borderWidth < 0) borderWidth = 0
@@ -433,6 +424,12 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     private fun changeSwingRepeat(intv: Int) {
         talkList[counterStep].swingRepeat = talkList[counterStep].swingRepeat + intv
     }
+    private fun changeRadius(intv: Int) {
+        talkList[counterStep].radius = talkList[counterStep].radius + intv
+       // sharData.saveTalkingListInPref(talkList)
+
+    }
+
 
     //------------------------
     private fun ttParaListView() {
@@ -441,9 +438,8 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             translaeTtPara(position)
             Toast.makeText(
                 this,
-                "Don't forget to select Para ListView to excute the operation",
-                Toast.LENGTH_SHORT
-            ).show()
+              //  "Don't forget to select Para ListView to excute the operation",
+                "Don't forget to select Para ",Toast.LENGTH_SHORT).show()
             // moveTheAnimation()
         }
     }
@@ -743,7 +739,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     }
 
 
-
     private fun findStyleObject(index: Int): StyleObject {
         var style1 = StyleObject()
         var bo = true
@@ -803,9 +798,9 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
     fun saveIt() {
         sharData.savePage(counterStep)
-        updateTitleTalkerSituation()
         sharData.saveTalkingListInPref(talkList)
         Toast.makeText(this, "It's save Mr", Toast.LENGTH_SHORT).show()
+        updateTitleTalkerSituation()
     }
 
     fun nextIt() {
@@ -871,25 +866,25 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
     }
 
-   /* private fun saveTalkingList() {
-        val gson = Gson()
-        val talkingString = gson.toJson(talkList)
-        editor.putString(STORELIST, talkingString)
-        editor.apply()
-    }*/
+    /* private fun saveTalkingList() {
+         val gson = Gson()
+         val talkingString = gson.toJson(talkList)
+         editor.putString(STORELIST, talkingString)
+         editor.apply()
+     }*/
 
-   /* private fun retriveTalkingList() {
-        talkList = arrayListOf()
-        val gson = Gson()
-        val jsonString = myPref.getString(STORELIST, null)
-        if (jsonString == null) {
-            updateTalkList()
+    /* private fun retriveTalkingList() {
+         talkList = arrayListOf()
+         val gson = Gson()
+         val jsonString = myPref.getString(STORELIST, null)
+         if (jsonString == null) {
+             updateTalkList()
 
-        } else {
-            val type = object : TypeToken<ArrayList<Talker>>() {}.type
-            talkList = gson.fromJson(jsonString, type)
-        }
-    }*/
+         } else {
+             val type = object : TypeToken<ArrayList<Talker>>() {}.type
+             talkList = gson.fromJson(jsonString, type)
+         }
+     }*/
 
     private fun updateTalkList() {
         //   operateList = FileStyling.initFileText11()
