@@ -32,6 +32,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:17.1.2'
     testImplementation 'junit:junit:4.12'
 
+    implementation 'com.google.android.material:material:1.0.0'
+
     implementation 'com.github.florent37:viewanimator:1.1.0'
     //https://github.com/florent37/ViewAnimator
     implementation 'com.google.code.gson:gson:2.8.6'

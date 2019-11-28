@@ -16,12 +16,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/godSpace2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="65dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="65dp"
         android:elevation="1dp"
@@ -36,10 +36,11 @@
         <TextView
             android:id="@+id/godSpeaking2A"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking2A" />
     </LinearLayout>
@@ -77,9 +78,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="65dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="65dp"
         android:elevation="1dp"
         android:gravity="center_horizontal|top"
         android:orientation="vertical"
@@ -92,60 +91,61 @@
         <TextView
             android:id="@+id/godSpeaking0"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:layout_marginTop="65dp"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking0" />
 
         <TextView
             android:id="@+id/godSpeaking1"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking1" />
 
         <TextView
             android:id="@+id/godSpeaking2"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking2" />
 
         <TextView
             android:id="@+id/godSpeaking3"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking3" />
 
         <TextView
             android:id="@+id/godSpeaking4"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking4" />
 
         <TextView
             android:id="@+id/godSpeaking5"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking5" />
     </LinearLayout>

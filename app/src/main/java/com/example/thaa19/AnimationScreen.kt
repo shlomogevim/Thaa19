@@ -12,11 +12,13 @@ import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thaa19.Helper.Companion.CURRENT_VERSIA
 import com.example.thaa19.Helper.Companion.FILE_NUM
 import com.example.thaa19.Helper.Companion.JSONSTRING
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_animation_screen.*
@@ -69,6 +71,16 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_animation_screen)
 
+/*
+
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
+*/
+
+
+
         setupParams()
 
         setPosition(1)
@@ -77,6 +89,8 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         createTalkList()
 
         prepareThisSection()
+
+        setPosition(3)           // set to publish mode
 
         moveTheAnimation()     // Let's play
     }
@@ -146,9 +160,10 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             tvAnimatinKind.visibility = INVISIBLE
         }
         if (PUBLISH_POSITION) {
-            plusAndMinusBtn.text = "Start"
+            /*plusAndMinusBtn.text = "Start"
             lastTalker_button.text = "---"
-            saveButton.text = "TEST"
+            saveButton.text = "TEST"*/
+            down_layout.visibility= INVISIBLE
             upper_layout.visibility = INVISIBLE
             style_ListView.visibility = INVISIBLE
             para_ListView.visibility = INVISIBLE
@@ -161,6 +176,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         if (TEST_POSITION) {
             when (v.id) {
+
                 R.id.textRevBtn -> readAgainTextFile()
                 R.id.newPageBtn -> enterNewCounterStep()
                 R.id.toShowModeBtn -> setPosition(2)
@@ -193,9 +209,49 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
                 R.id.saveButton -> setPosition(1)
                 R.id.nextButton -> nextIt()
                 R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE
+                R.id.fab->nextIt()
+                R.id.fab1->operatePrevios(v)
                 else -> moveTheAnimation()
             }
         }
+    }
+
+    private fun operatePrevios(view:View) {
+
+
+   /*     val snack = Snackbar.make(it,"This is a simple Snackbar",Snackbar.LENGTH_LONG)
+        snack.setAction("DISMISS", View.OnClickListener {
+            // executed when DISMISS is clicked
+            System.out.println("Snackbar Set Action - OnClick.")
+        })
+
+        // change action button text color
+        snack.setActionTextColor(Color.parseColor("#BB4444"))
+
+        // snackbar background color
+        snack.view.setBackgroundColor(Color.parseColor("#FFFFFF"))
+
+        val textView = snack.view.findViewById(android.support.design.R.id.snackbar_text) as TextView
+        // change Snackbar text color
+        textView.setTextColor(Color.parseColor("#4444DD"))
+
+        snack.show()
+    }
+*/
+        var bo=true
+       // val snack = Snackbar.make(view,"Press here to start from the beginning",Snackbar.LENGTH_LONG)
+        val snack = Snackbar.make(view,"",Snackbar.LENGTH_LONG)
+        snack.setActionTextColor(Color.parseColor("#fdd835"))
+        snack.view.setBackgroundColor(Color.parseColor("#574339"))
+        snack.setAction("Press here to start from the beginning", View.OnClickListener {   // executed when Start is clicked
+            initIt()
+            bo=false })
+            snack.show()
+        if (bo) previousIt()
+
+
+        /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+             .setAction("Action", null).show()*/
     }
 
     private fun initButton() {
@@ -209,6 +265,8 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         lastTalker_button.setOnClickListener { onClick(lastTalker_button) }
         reSizeTextBtn.setOnClickListener { onClick(reSizeTextBtn) }
         toShowModeBtn.setOnClickListener { onClick(toShowModeBtn) }
+        fab.setOnClickListener { onClick(fab) }
+        fab1.setOnClickListener { onClick(fab1) }
     }
 
 
@@ -248,9 +306,8 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         if (counterStep > 84) counterStep = 84
         if ((counterStep == 84 && SHOW_POSITION) || (counterStep == 84 && PUBLISH_POSITION)) {
             counterStep = 1
-            /* editor.putInt(CURRENT_SPEAKER, 1)
-             editor.commit()*/
-            finish()
+
+           // finish()
         }
         updateTitleTalkerSituation()
         if (counterStep < 1) counterStep = 1

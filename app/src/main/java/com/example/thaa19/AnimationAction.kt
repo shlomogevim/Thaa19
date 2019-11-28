@@ -279,7 +279,7 @@ class AnimationAction(val context: Context, val view: View) {
     //------------------------------------------
 
 
-    private fun initAllTextview(dur: Long) {
+    fun initAllTextview(dur: Long) {
         ViewAnimator
             .animate(man0, man1, man2, man3, man4, man5)
             .scale(0f)

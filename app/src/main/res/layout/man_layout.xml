@@ -6,15 +6,13 @@
     android:layout_height="match_parent"
     >
 
-    
+
     <LinearLayout
         android:id="@+id/manSpace"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="65dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="65dp"
         android:gravity="bottom|center_horizontal"
         android:orientation="vertical"
         android:visibility="visible"
@@ -24,44 +22,43 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-
         <TextView
             android:id="@+id/manSpeaking0"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="Man Speaking0" />
 
         <TextView
             android:id="@+id/manSpeaking1"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="Man Speaking1" />
 
         <TextView
             android:id="@+id/manSpeaking2"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="Man Speaking2" />
 
         <TextView
             android:id="@+id/manSpeaking3"
             style="@style/SimpleOne"
-            android:elevation="10dp"
-
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             android:typeface="normal"
             tools:text="Man Speaking3" />
@@ -69,9 +66,9 @@
         <TextView
             android:id="@+id/manSpeaking4"
             style="@style/SimpleOne"
-            android:elevation="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             android:typeface="normal"
             tools:text="Man Speaking4" />
@@ -79,13 +76,13 @@
         <TextView
             android:id="@+id/manSpeaking5"
             style="@style/SimpleOne"
-            android:elevation="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="65dp"
+            android:elevation="10dp"
             android:gravity="center_horizontal"
             android:typeface="normal"
-            tools:text="Man Speaking5"
-            android:layout_marginBottom="5dp"/>
+            tools:text="Man Speaking5" />
 
     </LinearLayout>
 
