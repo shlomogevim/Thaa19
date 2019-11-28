@@ -27,17 +27,9 @@ import kotlinx.android.synthetic.main.helper_view_layout.*
 
 class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
-    /*companion object {
-     //   val TALKLIST="talklist"+fileNum.toString()
-        const val FILE_NUM = "file_num"
-        const val JSONSTRING = "jsonString"
-        const val STARTALK = "start"
-        const val REQEST_CODE = 12
-        const val CURRENT_VERSIA = "currentversia"
-    }*/
+
 
     var talkList = ArrayList<Talker>()
-   // var currentFileNum = 20
 
     lateinit var sharData: ShareData
 
