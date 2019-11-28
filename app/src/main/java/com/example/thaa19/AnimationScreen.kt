@@ -115,10 +115,10 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         val gson = Gson()
         val jsonString = gson.toJson(talkList)
         val intent = Intent()
-        intent.putExtra(CURRENT_VERSIA, 5)
+        intent.putExtra(CURRENT_VERSIA, 6)
         intent.putExtra(JSONSTRING, jsonString)
         setResult(Activity.RESULT_OK, intent)
-        finish()
+        //finish()
     }
 
     private fun setLayoutShowMode() {

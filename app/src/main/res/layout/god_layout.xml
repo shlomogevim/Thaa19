@@ -36,6 +36,8 @@
         <TextView
             android:id="@+id/godSpeaking2A"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -62,6 +64,8 @@
         <TextView
             android:id="@+id/godSpeaking0A"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -88,6 +92,8 @@
         <TextView
             android:id="@+id/godSpeaking0"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -96,6 +102,8 @@
         <TextView
             android:id="@+id/godSpeaking1"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -104,6 +112,8 @@
         <TextView
             android:id="@+id/godSpeaking2"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -112,6 +122,8 @@
         <TextView
             android:id="@+id/godSpeaking3"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -120,6 +132,8 @@
         <TextView
             android:id="@+id/godSpeaking4"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -128,6 +142,8 @@
         <TextView
             android:id="@+id/godSpeaking5"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"

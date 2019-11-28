@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import com.github.florent37.viewanimator.ViewAnimator
 import kotlinx.android.synthetic.main.god_layout.view.*
 import kotlinx.android.synthetic.main.man_layout.view.*
@@ -111,7 +112,7 @@ class AnimationAction(val context: Context, val view: View) {
         }
     }
 
-    /* private fun styleTextViewTalk(tv: TextView, st: String, talker: Talker): TextView {
+     private fun styleTextViewTalk(tv: TextView, st: String, talker: Talker): TextView {
 
          val shape = GradientDrawable()
          shape.setCornerRadius(talker.radius)
@@ -145,41 +146,7 @@ class AnimationAction(val context: Context, val view: View) {
              tv.text = st.trim()
          }
          return tv
-     }*/
-
-    private fun styleTextViewTalk(tv: TextView, st: String, talker: Talker): TextView {
-        val shape = GradientDrawable()
-        shape.setCornerRadius(talker.radius)
-        shape.setStroke(20, Color.parseColor(talker.borderColor))
-
-        with(talker) {
-            if (colorBack == "none" || !backExist) {
-                shape.setColor(Color.TRANSPARENT)
-                shape.setStroke(20, Color.TRANSPARENT)
-            } else {
-                try {
-                    shape.setColor(Color.parseColor(colorBack))
-                    shape.setStroke(borderWidth, Color.parseColor(talker.borderColor))
-                } catch (e: Exception) {
-                    shape.setColor(Color.parseColor("#000000"))
-                }
-            }
-            tv.background = shape
-
-            try {
-                tv.setTextColor(Color.parseColor(colorText))
-            } catch (e: Exception) {
-                tv.setTextColor(Color.parseColor("#ffffff"))
-            }
-
-            tv.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, textSize)
-            tv.typeface = helper.getTypeFace(1)
-            tv.setPadding(padding[0], padding[1], padding[2], padding[3])
-            tv.setPadding(40, 40, 40, 40)
-            tv.text = st.trim()
-        }
-        return tv
-    }
+     }
 
 
     private fun configGodTextView(talker: Talker) {
@@ -278,8 +245,6 @@ class AnimationAction(val context: Context, val view: View) {
     var tv4: TextView? = null
     var tv5: TextView? = null
 
-    //val arrTextView = arrayOf(tv0, tv1, tv2, tv3, tv4, tv5)
-
     var man0: TextView = view.manSpeaking0
     var man1: TextView = view.manSpeaking1
     var man2: TextView = view.manSpeaking2
@@ -304,7 +269,7 @@ class AnimationAction(val context: Context, val view: View) {
 
         tv0 = null
         tv0A = null
-
+        tv2A=null
         tv1 = null
         tv2 = null
         tv3 = null
@@ -321,7 +286,7 @@ class AnimationAction(val context: Context, val view: View) {
             .duration(dur)
             .start()
         ViewAnimator
-            .animate(god0, god0A, god1, god2, god3, god4, god5)
+            .animate(god0, god0A,god2A, god1, god2, god3, god4, god5)
             .scale(0f)
             .duration(dur)
             .start()

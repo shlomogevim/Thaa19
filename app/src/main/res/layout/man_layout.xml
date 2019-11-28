@@ -3,22 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-
-    <ImageButton
-        android:id="@+id/man"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="50dp"
-        android:contentDescription="TODO"
-        android:elevation="1dp"
-        android:src="@drawable/man"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+    
     <LinearLayout
         android:id="@+id/manSpace"
         android:layout_width="0dp"
@@ -40,6 +28,8 @@
         <TextView
             android:id="@+id/manSpeaking0"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -48,6 +38,8 @@
         <TextView
             android:id="@+id/manSpeaking1"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -56,6 +48,8 @@
         <TextView
             android:id="@+id/manSpeaking2"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -64,6 +58,8 @@
         <TextView
             android:id="@+id/manSpeaking3"
             style="@style/SimpleOne"
+            android:elevation="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -73,6 +69,7 @@
         <TextView
             android:id="@+id/manSpeaking4"
             style="@style/SimpleOne"
+            android:elevation="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -82,11 +79,13 @@
         <TextView
             android:id="@+id/manSpeaking5"
             style="@style/SimpleOne"
+            android:elevation="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:typeface="normal"
-            tools:text="Man Speaking5" />
+            tools:text="Man Speaking5"
+            android:layout_marginBottom="5dp"/>
 
     </LinearLayout>
 
