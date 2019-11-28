@@ -194,6 +194,7 @@ package com.example.thaa19
                     }
                 }
             }
+
         }
 
         fun scale_swing(selector: Int, talker: Talker, arr: ArrayList<TextView?>) {

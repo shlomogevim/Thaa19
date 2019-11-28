@@ -312,26 +312,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         sharData.savePage(counterStep)
     }
 
-    /* private fun initValues() {
-
-         val TALKLIST = "talklist" + currentFileNum.toString()
-         myPref = getSharedPreferences(PREFS_NAME, 0)
-         editor = myPref.edit()
-
-         val jsonS = myPref.getString(TALKLIST, null)
-         if (jsonS == null) {
-             talkList = sharData.getTalkingListFromPref(0)
-         }
-
-         val selector = myPref.getInt(STARTALK, 0)
-         if (selector == 0) {
-             counterStep == 1
-             editor.putInt(STARTALK, 1)
-             editor.commit()
-         } else {
-             counterStep = myPref.getInt(CURRENT_SPEAKER, 1)
-         }
-     }*/
 
 
     fun backGroundConfigration() {
@@ -941,6 +921,28 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             talkList[ind] = enterDefaltValueToTalkList(talkList[ind])
         }
     }
+
+    /* private fun initValues() {
+
+        val TALKLIST = "talklist" + currentFileNum.toString()
+        myPref = getSharedPreferences(PREFS_NAME, 0)
+        editor = myPref.edit()
+
+        val jsonS = myPref.getString(TALKLIST, null)
+        if (jsonS == null) {
+            talkList = sharData.getTalkingListFromPref(0)
+        }
+
+        val selector = myPref.getInt(STARTALK, 0)
+        if (selector == 0) {
+            counterStep == 1
+            editor.putInt(STARTALK, 1)
+            editor.commit()
+        } else {
+            counterStep = myPref.getInt(CURRENT_SPEAKER, 1)
+        }
+    }*/
+
 
     fun enterDefaltValueToTalkList(talker: Talker): Talker {
 
