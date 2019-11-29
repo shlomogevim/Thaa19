@@ -6,17 +6,17 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.thaa19.Helper.Companion.CURRENT_VERSIA
-import com.example.thaa19.Helper.Companion.FILE_NUM
 import com.example.thaa19.Helper.Companion.JSONSTRING
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -26,7 +26,6 @@ import kotlinx.android.synthetic.main.helper_view_layout.*
 
 
 class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
-
 
 
     var talkList = ArrayList<Talker>()
@@ -58,22 +57,17 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     var SHOW_POSITION: Boolean = false
     var PUBLISH_POSITION: Boolean = false
 
+    var counterInProgress = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_animation_screen)
 
-/*
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-*/
-
-
 
         setupParams()
+
+
 
         setPosition(1)
 
@@ -88,10 +82,6 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setupParams() {
-        /*myPref = getSharedPreferences(PREFS_NAME, 0)
-        editor = myPref.edit()*/
-
-     //   currentFileNum = intent.getIntExtra(FILE_NUM, 0)
         sharData = ShareData(this)
         activatApp = ActivateApp(this)
         animationInAction = AnimationAction(this, mainLayout)
@@ -120,10 +110,11 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     private fun enterDataToFirebase() {
         val gson = Gson()
         val jsonString = gson.toJson(talkList)
-        val intent = Intent()
-        intent.putExtra(CURRENT_VERSIA, 6)
-        intent.putExtra(JSONSTRING, jsonString)
-        setResult(Activity.RESULT_OK, intent)
+        val intent = Intent().also {
+            it.putExtra(CURRENT_VERSIA, 6)
+            it.putExtra(JSONSTRING, jsonString)
+            setResult(Activity.RESULT_OK, it)
+        }
         //finish()
     }
 
@@ -155,7 +146,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             /*plusAndMinusBtn.text = "Start"
             lastTalker_button.text = "---"
             saveButton.text = "TEST"*/
-            down_layout.visibility= INVISIBLE
+            down_layout.visibility = INVISIBLE
             upper_layout.visibility = INVISIBLE
             style_ListView.visibility = INVISIBLE
             para_ListView.visibility = INVISIBLE
@@ -165,10 +156,9 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onClick(v: View) {
+    fun letsPlay(v: View) {
         if (TEST_POSITION) {
             when (v.id) {
-
                 R.id.textRevBtn -> readAgainTextFile()
                 R.id.newPageBtn -> enterNewCounterStep()
                 R.id.toShowModeBtn -> setPosition(2)
@@ -179,7 +169,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
                 R.id.previousButton -> previousIt()
                 R.id.lastTalker_button -> retriveLastTalker()
                 R.id.reSizeTextBtn -> minTextSize()
-                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.VISIBLE
+                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = VISIBLE
                 else -> moveTheAnimation()
             }
             return
@@ -190,60 +180,108 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
                 R.id.lastTalker_button -> setPosition(1)
                 R.id.saveButton -> setPosition(3)
                 R.id.nextButton -> nextIt()
-                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE
+                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = INVISIBLE
                 else -> moveTheAnimation()
             }
             return
         }
         if (PUBLISH_POSITION) {
             when (v.id) {
-                R.id.plusAndMinusBtn -> initIt()
-                R.id.saveButton -> setPosition(1)
-                R.id.nextButton -> nextIt()
-                R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE
-                R.id.fab->nextIt()
-                R.id.fab1->operatePrevios(v)
+                /* R.id.plusAndMinusBtn -> initIt()
+                 R.id.saveButton -> setPosition(1)
+                 R.id.nextButton -> nextIt()
+                 R.id.tvAnimatinKind -> tvAnimatinKind.visibility = View.INVISIBLE*/
+                R.id.fab -> nextIt()
+                R.id.fab1 -> operatePrevios(v)
                 else -> moveTheAnimation()
             }
         }
+
     }
 
-    private fun operatePrevios(view:View) {
+    private fun counterDownT(v: View, dur: Long) {
+        var dd = 0
+        Utile.chageBackgroundColor(1, tvPage, 1000)
 
+        val timer = object : CountDownTimer(dur, 1) {
+            override fun onFinish() {
 
-   /*     val snack = Snackbar.make(it,"This is a simple Snackbar",Snackbar.LENGTH_LONG)
-        snack.setAction("DISMISS", View.OnClickListener {
-            // executed when DISMISS is clicked
-            System.out.println("Snackbar Set Action - OnClick.")
-        })
+                //Log.d("clima", "dd -> $dd    shoot ")
+                //  counterInProgress = false
 
-        // change action button text color
-        snack.setActionTextColor(Color.parseColor("#BB4444"))
+                //tvPage.setBackgroundColor(Color.GREEN);
+                Utile.chageBackgroundColor(0, tvPage, 2000)
+                fab.isClickable = true
+                fab1.isClickable = true
+                // letsPlay(v)
+            }
 
-        // snackbar background color
-        snack.view.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            override fun onTick(p0: Long) {
+                /*if ((p0.toInt() % 100) == 0) {
+                    dd = p0.toInt() / 100
+                    Log.d("clima", "dd -> $dd")
+                }*/
+                // tvPage.setBackgroundColor(Color.RED)
+                fab.isClickable = false
+                fab1.isClickable = false
 
-        val textView = snack.view.findViewById(android.support.design.R.id.snackbar_text) as TextView
-        // change Snackbar text color
-        textView.setTextColor(Color.parseColor("#4444DD"))
+                //Log.d("clima", "dur -> $dur")
 
-        snack.show()
+            }
+        }
+        timer.start()
     }
-*/
-        var bo=true
-       // val snack = Snackbar.make(view,"Press here to start from the beginning",Snackbar.LENGTH_LONG)
-        val snack = Snackbar.make(view,"",Snackbar.LENGTH_LONG)
+
+
+    override fun onClick(v: View) {
+
+        var cont = 0
+        when (v.id) {
+            R.id.fab -> cont = counterStep + 1
+            R.id.fab1 -> cont = counterStep - 1
+        }
+        val talker = talkList[cont]
+        val size = talker.takingArray.size
+        //  Log.d("clima","$talker")
+
+        fab.isClickable = false
+        fab1.isClickable = false
+        Utile.chageBackgroundColor(1, tvPage, 1000)
+
+        letsPlay(v)
+
+        Utile.listener = { it1, it2 ->
+           // Log.d("clima", "Hii num->$it1 and time->$it2 and size=$size")
+            if (size == 1 || it1 == talker.takingArray.size) {
+                fab.isClickable = true
+                fab1.isClickable = true
+                Utile.chageBackgroundColor(0, tvPage, 1000)
+                    //  Log.d("clima", "Sofi num->$it1 and time->$it2 and size=$size")
+
+            }
+        }
+
+        // counterDownT(v, durTotal)
+
+       // tvAnimatinKind.visibility = VISIBLE
+
+
+    }
+
+
+    private fun operatePrevios(view: View) {
+        var bo = true
+        // val snack = Snackbar.make(view,"Press here to start from the beginning",Snackbar.LENGTH_LONG)
+        val snack = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         snack.setActionTextColor(Color.parseColor("#fdd835"))
         snack.view.setBackgroundColor(Color.parseColor("#574339"))
-        snack.setAction("Press here to start from the beginning", View.OnClickListener {   // executed when Start is clicked
+        snack.setAction("Press here to start from the beginning", View.OnClickListener {
+            // executed when Start is clicked
             initIt()
-            bo=false })
-            snack.show()
+            bo = false
+        })
+        snack.show()
         if (bo) previousIt()
-
-
-        /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-             .setAction("Action", null).show()*/
     }
 
     private fun initButton() {
@@ -294,12 +332,20 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
         backGroundConfigration()
     }
 
+    /* val timer = object: CountDownTimer(20000, 1000) {
+         override fun onTick(millisUntilFinished: Long) {...}
+
+         override fun onFinish() {...}
+     }
+     timer.start()
+ */
     private fun moveTheAnimation() {
+
         if (counterStep > 84) counterStep = 84
         if ((counterStep == 84 && SHOW_POSITION) || (counterStep == 84 && PUBLISH_POSITION)) {
             counterStep = 1
 
-           // finish()
+            // finish()
         }
         updateTitleTalkerSituation()
         if (counterStep < 1) counterStep = 1
@@ -308,10 +354,11 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
         manMode = counterStep % 2 != 0
 
+
+
         animationInAction.excuteTalker(talkList[counterStep])
         sharData.savePage(counterStep)
     }
-
 
 
     fun backGroundConfigration() {
@@ -428,7 +475,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             22 -> changeBorderWidth(intv)
             23 -> talkList[counterStep].borderWidth = 0
             24 -> changeSwingRepeat(intv)
-            25->changeRadius(intv)
+            25 -> changeRadius(intv)
         }
         chkNewData()
         if (position != 10) moveTheAnimation()
@@ -441,7 +488,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             if (textSize < 8f) textSize = 8f
             if (dur > 10000f) dur = 10000
             if (dur < 100f) dur = 100
-          //  if (radius > 100f) radius = 100f
+            //  if (radius > 100f) radius = 100f
             if (radius < 2f) radius = 2f
             if (borderWidth > 70) borderWidth = 70
             if (borderWidth < 0) borderWidth = 0
@@ -453,9 +500,10 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     private fun changeSwingRepeat(intv: Int) {
         talkList[counterStep].swingRepeat = talkList[counterStep].swingRepeat + intv
     }
+
     private fun changeRadius(intv: Int) {
         talkList[counterStep].radius = talkList[counterStep].radius + intv
-       // sharData.saveTalkingListInPref(talkList)
+        // sharData.saveTalkingListInPref(talkList)
 
     }
 
@@ -463,12 +511,13 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     //------------------------
     private fun ttParaListView() {
         createTtParaTV()
-        ttPara_listView.setOnItemClickListener { _, view, position, id ->
+        ttPara_listView.setOnItemClickListener { _, _, position, id ->
             translaeTtPara(position)
             Toast.makeText(
                 this,
-              //  "Don't forget to select Para ListView to excute the operation",
-                "Don't forget to select Para ",Toast.LENGTH_SHORT).show()
+                //  "Don't forget to select Para ListView to excute the operation",
+                "Don't forget to select Para ", Toast.LENGTH_SHORT
+            ).show()
             // moveTheAnimation()
         }
     }
@@ -538,7 +587,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
     private fun translaeTtPara(position: Int) {
         when (position) {
             14 -> selectColor()
-            15 -> colorNam_ET.visibility = View.VISIBLE
+            15 -> colorNam_ET.visibility = VISIBLE
             16 -> interval = 0
             17 -> interval = 1
             18 -> interval = 2
@@ -565,7 +614,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             39 -> currentColor = "#ffffff"
             40 -> currentColor = "#000000"
             41 -> currentColor = "#8e0000"
-            41 -> currentColor = "#ad1457"
+            411 -> currentColor = "#ad1457"
             42 -> currentColor = "#9c27b0"
             43 -> currentColor = "#1565c0"
             44 -> currentColor = "#03a9f4"
@@ -708,12 +757,12 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
             para_ListView.visibility = INVISIBLE
             ttPara_listView.visibility = INVISIBLE
             action_ListView.visibility = INVISIBLE
-            pageNumEditText.visibility = View.VISIBLE
+            pageNumEditText.visibility = VISIBLE
         } else {
-            style_ListView.visibility = View.VISIBLE
-            para_ListView.visibility = View.VISIBLE
-            ttPara_listView.visibility = View.VISIBLE
-            action_ListView.visibility = View.VISIBLE
+            style_ListView.visibility = VISIBLE
+            para_ListView.visibility = VISIBLE
+            ttPara_listView.visibility = VISIBLE
+            action_ListView.visibility = VISIBLE
             pageNumEditText.visibility = INVISIBLE
             pageNumEditText.hideKeyboard()
         }
