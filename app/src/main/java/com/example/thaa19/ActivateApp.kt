@@ -5,8 +5,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class ActivateApp(val context: Context) : AppCompatActivity() {
-
-
     fun textReRead(
         talkList: ArrayList<Talker>,
         textTalkList: ArrayList<Talker>

@@ -76,7 +76,7 @@ class AnimationScreen() : AppCompatActivity(), View.OnClickListener {
 
         prepareThisSection()
 
-        setPosition(3)           // set to publish mode
+       setPosition(3)           // set to publish mode
 
         moveTheAnimation()     // Let's play
     }

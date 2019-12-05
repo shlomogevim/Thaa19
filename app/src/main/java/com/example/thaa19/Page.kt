@@ -2,8 +2,6 @@ package com.example.thaa19
 
 
     object Page {
-        val baseColorList = ArrayList<StyleObject>()
-
 
         val styleArray = ArrayList<StyleObject>()
         fun createBasicStyle() {
